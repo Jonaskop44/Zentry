@@ -241,8 +241,6 @@ export class ActivityService {
       },
     });
 
-    console.table(activities);
-
     if (!activities.length) throw new NotFoundException('No activities found');
 
     const employee = await this.prisma.employee.findUnique({
@@ -251,6 +249,14 @@ export class ActivityService {
         userId: userId,
       },
     });
+
+    const activityTypeTranslations: Record<string, string> = {
+      WORK: 'Arbeit',
+      BREAK: 'Pause',
+      WC: 'WC',
+      SMOKE: 'Raucherpause',
+      FREE: 'Frei',
+    };
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Activities');
@@ -265,7 +271,7 @@ export class ActivityService {
     activities.forEach((entry) => {
       worksheet.addRow({
         name: employee?.firstName + ' ' + employee?.lastName,
-        type: entry.type,
+        type: activityTypeTranslations[entry.type],
         startTime: entry.startTime
           ? format(new Date(entry.startTime), 'yyyy-MM-dd HH:mm:ss')
           : '',
@@ -276,7 +282,6 @@ export class ActivityService {
     });
 
     const bufferData = await workbook.xlsx.writeBuffer();
-    // Ensure the result is a Node.js Buffer
     const buffer = Buffer.isBuffer(bufferData)
       ? bufferData
       : Buffer.from(bufferData);
