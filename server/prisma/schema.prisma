@@ -28,7 +28,8 @@ model User {
 
 model Employee {
   id         Int        @id @default(autoincrement())
-  name       String
+  firstName  String
+  lastName   String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   userId     Int
