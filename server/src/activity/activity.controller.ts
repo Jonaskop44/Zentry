@@ -72,21 +72,6 @@ export class ActivityController {
     return this.activityService.updateActivity(Number(activityId), dto, userId);
   }
 
-  @Get('statistics/daily')
-  async getDailyOverview(@Request() request, @Query('date') date?: string) {
-    const userId = request.user.id;
-    return this.activityService.getDailyOverview(userId, date);
-  }
-
-  @Get('statistics/weekly')
-  async getWeeklyOverview(
-    @Request() request,
-    @Query('startDate') startDate?: string,
-  ) {
-    const userId = request.user.id;
-    return this.activityService.getWeeklyOverview(userId, startDate);
-  }
-
   @Get('statistics/:employeeId/export')
   async exportActivitiesExcel(
     @Request() request,
