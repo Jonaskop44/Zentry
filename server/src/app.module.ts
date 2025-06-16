@@ -4,9 +4,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), PrismaModule, UserModule, AuthModule, AdminModule],
+  imports: [ConfigModule.forRoot(), PrismaModule, UserModule, AuthModule, AdminModule, ActivityModule],
   controllers: [],
   providers: [],
 })
