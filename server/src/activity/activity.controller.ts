@@ -95,7 +95,7 @@ export class ActivityController {
   ) {
     const userId = request.user.id;
     const buffer = await this.activityService.exportActivitiesExcel(
-      +employeeId,
+      Number(employeeId),
       userId,
     );
 
