@@ -8,6 +8,8 @@ import {
   Get,
   Delete,
   Patch,
+  Query,
+  Response,
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
@@ -68,5 +70,41 @@ export class ActivityController {
   ) {
     const userId = request.user.id;
     return this.activityService.updateActivity(Number(activityId), dto, userId);
+  }
+
+  @Get('statistics/daily')
+  async getDailyOverview(@Request() request, @Query('date') date?: string) {
+    const userId = request.user.id;
+    return this.activityService.getDailyOverview(userId, date);
+  }
+
+  @Get('statistics/weekly')
+  async getWeeklyOverview(
+    @Request() request,
+    @Query('startDate') startDate?: string,
+  ) {
+    const userId = request.user.id;
+    return this.activityService.getWeeklyOverview(userId, startDate);
+  }
+
+  @Get('statistics/:employeeId/export')
+  async exportActivities(
+    @Request() request,
+    @Param('employeeId') employeeId: string,
+    @Response() response,
+  ) {
+    const userId = request.user.id;
+    const data = await this.activityService.exportActivities(
+      +employeeId,
+      userId,
+    );
+
+    response.setHeader('Content-Type', 'text/csv');
+    response.setHeader(
+      'Content-Disposition',
+      'attachment; filename=activities.csv',
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return response.send(data);
   }
 }

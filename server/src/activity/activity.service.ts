@@ -1,6 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StartActivityDto, UpdateActivityDto } from './dto/activity.dto';
+import {
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+} from 'date-fns';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class ActivityService {
@@ -143,5 +150,116 @@ export class ActivityService {
         employeeId: dto.employeeId,
       },
     });
+  }
+
+  async getDailyOverview(userId: number, dateStr?: string) {
+    const date = dateStr ? new Date(dateStr) : new Date();
+    const start = startOfDay(date);
+    const end = endOfDay(date);
+
+    const activities = await this.prisma.activity.findMany({
+      where: {
+        startTime: {
+          gte: start,
+          lte: end,
+        },
+        employee: {
+          userId: userId,
+        },
+      },
+      include: {
+        employee: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    return this.summarizeActivities(activities);
+  }
+
+  async getWeeklyOverview(userId: number, startStr?: string) {
+    const now = startStr ? new Date(startStr) : new Date();
+    const start = startOfWeek(now, { weekStartsOn: 1 });
+    const end = endOfWeek(now, { weekStartsOn: 1 });
+
+    const activities = await this.prisma.activity.findMany({
+      where: {
+        startTime: {
+          gte: start,
+          lte: end,
+        },
+        employee: {
+          userId: userId,
+        },
+      },
+      include: {
+        employee: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    return this.summarizeActivities(activities);
+  }
+
+  private summarizeActivities(activities: any[]) {
+    const result: Record<string, any> = {};
+
+    for (const activity of activities) {
+      const name = `${activity.employee.firstName} ${activity.employee.lastName}`;
+      if (!result[name]) {
+        result[name] = {
+          totalMinutes: 0,
+          byType: {} as Record<string, number>,
+        };
+      }
+
+      const end = activity.endTime ? new Date(activity.endTime) : new Date();
+      const start = new Date(activity.startTime);
+      const duration = (end.getTime() - start.getTime()) / 60000;
+
+      result[name].totalMinutes += duration;
+      result[name].byType[activity.type] =
+        (result[name].byType[activity.type] || 0) + duration;
+    }
+
+    return result;
+  }
+
+  async exportActivities(employeeId: number, userId: number) {
+    const activities = await this.prisma.activity.findMany({
+      where: {
+        employeeId: employeeId,
+        employee: {
+          userId: userId,
+        },
+      },
+      orderBy: {
+        startTime: 'asc',
+      },
+    });
+
+    if (!activities.length) throw new NotFoundException('No activities found');
+
+    const header = 'ID,Type,StartTime,EndTime,CreatedAt,UpdatedAt\n';
+    const rows = activities
+      .map((a) =>
+        [
+          a.id,
+          a.type,
+          a.startTime,
+          a.endTime ?? '',
+          a.createdAt,
+          a.updatedAt,
+        ].join(','),
+      )
+      .join('\n');
+    return header + rows;
   }
 }
