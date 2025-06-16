@@ -263,22 +263,36 @@ export class ActivityService {
 
     worksheet.columns = [
       { header: 'Name', key: 'name', width: 30 },
-      { header: 'Type', key: 'type', width: 15 },
+      { header: 'Typ', key: 'type', width: 15 },
       { header: 'Start', key: 'startTime', width: 25 },
       { header: 'Ende', key: 'endTime', width: 25 },
+      { header: 'Dauer (Minuten)', key: 'duration', width: 20 },
     ];
 
+    let totalMinutes = 0;
+
     activities.forEach((entry) => {
+      const start = new Date(entry.startTime);
+      const end = entry.endTime ? new Date(entry.endTime) : new Date();
+
+      const durationMs = end.getTime() - start.getTime();
+      const duration = parseFloat((durationMs / 60000).toFixed(2));
+
+      totalMinutes += duration;
+
       worksheet.addRow({
-        name: employee?.firstName + ' ' + employee?.lastName,
-        type: activityTypeTranslations[entry.type],
-        startTime: entry.startTime
-          ? format(new Date(entry.startTime), 'yyyy-MM-dd HH:mm:ss')
-          : '',
-        endTime: entry.endTime
-          ? format(new Date(entry.endTime), 'yyyy-MM-dd HH:mm:ss')
-          : '',
+        name: `${employee?.firstName} ${employee?.lastName}`,
+        type: activityTypeTranslations[entry.type] ?? entry.type,
+        startTime: format(start, 'yyyy-MM-dd HH:mm:ss'),
+        endTime: entry.endTime ? format(end, 'yyyy-MM-dd HH:mm:ss') : '',
+        duration: duration,
       });
+    });
+
+    worksheet.addRow({});
+    worksheet.addRow({
+      name: 'Total time today',
+      duration: `${totalMinutes} minutes`,
     });
 
     const bufferData = await workbook.xlsx.writeBuffer();
