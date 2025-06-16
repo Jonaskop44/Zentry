@@ -88,23 +88,25 @@ export class ActivityController {
   }
 
   @Get('statistics/:employeeId/export')
-  async exportActivities(
+  async exportActivitiesExcel(
     @Request() request,
     @Param('employeeId') employeeId: string,
     @Response() response,
   ) {
     const userId = request.user.id;
-    const data = await this.activityService.exportActivities(
+    const buffer = await this.activityService.exportActivitiesExcel(
       +employeeId,
       userId,
     );
 
-    response.setHeader('Content-Type', 'text/csv');
+    response.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
     response.setHeader(
       'Content-Disposition',
-      'attachment; filename=activities.csv',
+      'attachment; filename=activities.xlsx',
     );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return response.send(data);
+    response.send(buffer);
   }
 }

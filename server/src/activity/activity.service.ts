@@ -1,13 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StartActivityDto, UpdateActivityDto } from './dto/activity.dto';
-import {
-  startOfDay,
-  endOfDay,
-  startOfWeek,
-  endOfWeek,
-} from 'date-fns';
+import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 import * as ExcelJS from 'exceljs';
+import { format } from 'date-fns';
 
 @Injectable()
 export class ActivityService {
@@ -232,7 +228,7 @@ export class ActivityService {
     return result;
   }
 
-  async exportActivities(employeeId: number, userId: number) {
+  async exportActivitiesExcel(employeeId: number, userId: number) {
     const activities = await this.prisma.activity.findMany({
       where: {
         employeeId: employeeId,
@@ -245,21 +241,45 @@ export class ActivityService {
       },
     });
 
+    console.table(activities);
+
     if (!activities.length) throw new NotFoundException('No activities found');
 
-    const header = 'ID,Type,StartTime,EndTime,CreatedAt,UpdatedAt\n';
-    const rows = activities
-      .map((a) =>
-        [
-          a.id,
-          a.type,
-          a.startTime,
-          a.endTime ?? '',
-          a.createdAt,
-          a.updatedAt,
-        ].join(','),
-      )
-      .join('\n');
-    return header + rows;
+    const employee = await this.prisma.employee.findUnique({
+      where: {
+        id: employeeId,
+        userId: userId,
+      },
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Activities');
+
+    worksheet.columns = [
+      { header: 'Name', key: 'name', width: 30 },
+      { header: 'Type', key: 'type', width: 15 },
+      { header: 'Start', key: 'startTime', width: 25 },
+      { header: 'Ende', key: 'endTime', width: 25 },
+    ];
+
+    activities.forEach((entry) => {
+      worksheet.addRow({
+        name: employee?.firstName + ' ' + employee?.lastName,
+        type: entry.type,
+        startTime: entry.startTime
+          ? format(new Date(entry.startTime), 'yyyy-MM-dd HH:mm:ss')
+          : '',
+        endTime: entry.endTime
+          ? format(new Date(entry.endTime), 'yyyy-MM-dd HH:mm:ss')
+          : '',
+      });
+    });
+
+    const bufferData = await workbook.xlsx.writeBuffer();
+    // Ensure the result is a Node.js Buffer
+    const buffer = Buffer.isBuffer(bufferData)
+      ? bufferData
+      : Buffer.from(bufferData);
+    return buffer;
   }
 }
