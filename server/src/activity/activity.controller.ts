@@ -8,7 +8,6 @@ import {
   Get,
   Delete,
   Patch,
-  Query,
   Response,
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
@@ -72,15 +71,15 @@ export class ActivityController {
     return this.activityService.updateActivity(Number(activityId), dto, userId);
   }
 
-  @Get('statistics/:employeeId/export')
-  async exportActivitiesExcel(
-    @Request() request,
+  @Get('statistics/export/:employeeId')
+  async exportSingleEmployee(
     @Param('employeeId') employeeId: string,
+    @Request() request,
     @Response() response,
   ) {
     const userId = request.user.id;
     const buffer = await this.activityService.exportActivitiesExcel(
-      Number(employeeId),
+      +employeeId,
       userId,
     );
 
@@ -90,8 +89,26 @@ export class ActivityController {
     );
     response.setHeader(
       'Content-Disposition',
-      'attachment; filename=activities.xlsx',
+      `attachment; filename=activities_${employeeId}.xlsx`,
     );
     response.send(buffer);
+  }
+
+  @Get('statistics/export-all')
+  async exportAllEmployees(@Request() req, @Response() res) {
+    const buffer = await this.activityService.exportActivitiesExcel(
+      null,
+      req.user.id,
+    );
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=all_activities.xlsx`,
+    );
+    res.send(buffer);
   }
 }

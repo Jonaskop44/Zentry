@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StartActivityDto, UpdateActivityDto } from './dto/activity.dto';
-import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 import * as ExcelJS from 'exceljs';
 import { format } from 'date-fns';
 
@@ -148,13 +147,16 @@ export class ActivityService {
     });
   }
 
-  async exportActivitiesExcel(employeeId: number, userId: number) {
+  async exportActivitiesExcel(employeeId: number | null, userId: number) {
     const activities = await this.prisma.activity.findMany({
       where: {
-        employeeId: employeeId,
         employee: {
           userId: userId,
         },
+        ...(employeeId ? { employeeId } : {}),
+      },
+      include: {
+        employee: true,
       },
       orderBy: {
         startTime: 'asc',
@@ -162,13 +164,6 @@ export class ActivityService {
     });
 
     if (!activities.length) throw new NotFoundException('No activities found');
-
-    const employee = await this.prisma.employee.findUnique({
-      where: {
-        id: employeeId,
-        userId: userId,
-      },
-    });
 
     const activityTypeTranslations: Record<string, string> = {
       WORK: 'Arbeit',
@@ -189,7 +184,7 @@ export class ActivityService {
       { header: 'Dauer (Minuten)', key: 'duration', width: 20 },
     ];
 
-    let totalMinutes = 0;
+    const totalMinutesByEmployee: Record<string, number> = {};
 
     activities.forEach((entry) => {
       const start = new Date(entry.startTime);
@@ -198,10 +193,12 @@ export class ActivityService {
       const durationMs = end.getTime() - start.getTime();
       const duration = parseFloat((durationMs / 60000).toFixed(2));
 
-      totalMinutes += duration;
+      const name = `${entry.employee.firstName} ${entry.employee.lastName}`;
+      totalMinutesByEmployee[name] =
+        (totalMinutesByEmployee[name] || 0) + duration;
 
       worksheet.addRow({
-        name: `${employee?.firstName} ${employee?.lastName}`,
+        name,
         type: activityTypeTranslations[entry.type] ?? entry.type,
         startTime: format(start, 'yyyy-MM-dd HH:mm:ss'),
         endTime: entry.endTime ? format(end, 'yyyy-MM-dd HH:mm:ss') : '',
@@ -210,9 +207,11 @@ export class ActivityService {
     });
 
     worksheet.addRow({});
-    worksheet.addRow({
-      name: 'Total time today',
-      duration: `${totalMinutes} minutes`,
+    Object.entries(totalMinutesByEmployee).forEach(([name, minutes]) => {
+      worksheet.addRow({
+        name: `Total für ${name}`,
+        duration: `${minutes.toFixed(2)} Minuten`,
+      });
     });
 
     const bufferData = await workbook.xlsx.writeBuffer();
