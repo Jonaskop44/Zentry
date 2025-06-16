@@ -47,4 +47,55 @@ export class ActivityService {
       },
     });
   }
+
+  async getAllActivities(userId: number) {
+    const activities = await this.prisma.activity.findMany({
+      where: {
+        employee: {
+          userId: userId,
+        },
+      },
+      orderBy: {
+        startTime: 'desc',
+      },
+      include: {
+        employee: true,
+      },
+    });
+
+    if (!activities || activities.length === 0) {
+      throw new NotFoundException('No activities found');
+    }
+
+    return activities;
+  }
+
+  async getAllActivitiesByEmployeeId(employeeId: number, userId: number) {
+    const employee = await this.prisma.employee.findUnique({
+      where: {
+        id: employeeId,
+        userId: userId,
+      },
+    });
+
+    if (!employee) throw new NotFoundException('Employee not found');
+
+    const activities = await this.prisma.activity.findMany({
+      where: {
+        employeeId: employeeId,
+      },
+      orderBy: {
+        startTime: 'desc',
+      },
+      include: {
+        employee: true,
+      },
+    });
+
+    if (!activities || activities.length === 0) {
+      throw new NotFoundException('No activities found for this employee');
+    }
+
+    return activities;
+  }
 }

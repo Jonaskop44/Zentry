@@ -5,6 +5,7 @@ import {
   UseGuards,
   Request,
   Param,
+  Get,
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
@@ -28,5 +29,23 @@ export class ActivityController {
   ) {
     const userId = request.user.id;
     return this.activityService.endActivity(Number(activityId), userId);
+  }
+
+  @Get('all')
+  async getAllActivities(@Request() request) {
+    const userId = request.user.id;
+    return this.activityService.getAllActivities(userId);
+  }
+
+  @Get(':employeeId')
+  async getEmployeeActivities(
+    @Param('employeeId') employeeId: string,
+    @Request() request,
+  ) {
+    const userId = request.user.id;
+    return this.activityService.getAllActivitiesByEmployeeId(
+      Number(employeeId),
+      userId,
+    );
   }
 }
