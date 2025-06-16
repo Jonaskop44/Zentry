@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { StartActivityDto } from './dto/activity.dto';
+import { StartActivityDto, UpdateActivityDto } from './dto/activity.dto';
 
 @Injectable()
 export class ActivityService {
@@ -97,5 +97,51 @@ export class ActivityService {
     }
 
     return activities;
+  }
+
+  async deleteActivity(activityId: number, userId: number) {
+    const activity = await this.prisma.activity.findUnique({
+      where: {
+        id: activityId,
+        employee: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!activity) throw new NotFoundException('Activity not found');
+
+    return this.prisma.activity.delete({
+      where: {
+        id: activityId,
+      },
+    });
+  }
+
+  async updateActivity(
+    activityId: number,
+    dto: UpdateActivityDto,
+    userId: number,
+  ) {
+    const activity = await this.prisma.activity.findUnique({
+      where: {
+        id: activityId,
+        employee: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!activity) throw new NotFoundException('Activity not found');
+
+    return this.prisma.activity.update({
+      where: {
+        id: activityId,
+      },
+      data: {
+        type: dto.activityType,
+        employeeId: dto.employeeId,
+      },
+    });
   }
 }
