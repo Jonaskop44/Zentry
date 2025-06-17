@@ -6,8 +6,6 @@ export default class ApiClient {
   constructor() {
     this.auth = new Auth();
 
-    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-
     axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
   }
 }
