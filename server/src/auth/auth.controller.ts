@@ -64,6 +64,7 @@ export class AuthController {
 
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
+  @HttpCode(200)
   async refreshToken(
     @Request() request,
     @Response({ passthrough: true }) response: ExpressResponse,
