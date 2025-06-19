@@ -1,21 +1,33 @@
 "use client";
 
 import ApiClient from "@/api";
+import { useUserStore } from "@/data/user-store";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const apiClient = new ApiClient();
 
 const Home = () => {
-  const [user, setUser] = useState({ username: "", password: "" });
+  const [loginUser, setLoginUser] = useState({ username: "", password: "" });
   const [employees, setEmployees] = useState([]);
+  const { user, isAuthenticated } = useUserStore();
 
   const login = async () => {
-    apiClient.auth.helper.login(user).then((response) => {
+    apiClient.auth.helper.login(loginUser).then((response) => {
       if (response.status) {
         toast.success("Login successful");
       } else {
         toast.error("Login failed");
+      }
+    });
+  };
+
+  const logout = async () => {
+    apiClient.auth.helper.logout().then((response) => {
+      if (response.status) {
+        toast.success("Logout successful");
+      } else {
+        toast.error("Logout failed");
       }
     });
   };
@@ -36,16 +48,24 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100 gap-4">
         <input
           placeholder="Username"
-          value={user.username}
-          onChange={(e) => setUser({ ...user, username: e.target.value })}
+          value={loginUser.username}
+          onChange={(e) =>
+            setLoginUser({ ...loginUser, username: e.target.value })
+          }
         />
         <input
           type="password"
           placeholder="Password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          value={loginUser.password}
+          onChange={(e) =>
+            setLoginUser({ ...loginUser, password: e.target.value })
+          }
         />
         <button onClick={login}>Login</button>
+        {isAuthenticated && (
+          <p className="text-green-500">Welcome, {user.username}!</p>
+        )}
+        <button onClick={logout}>Logout</button>
       </div>
       <div>
         <button

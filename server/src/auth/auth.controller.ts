@@ -57,6 +57,24 @@ export class AuthController {
     return user;
   }
 
+  @Post('logout')
+  @HttpCode(200)
+  logout(@Response({ passthrough: true }) reponse: ExpressResponse) {
+    reponse.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
+    reponse.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
+    return { success: true };
+  }
+
   @Post('register')
   async register(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
