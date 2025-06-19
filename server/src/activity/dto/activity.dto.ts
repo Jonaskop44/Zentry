@@ -1,11 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-} from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { ActivityType } from 'generated/prisma';
 
 export class StartActivityDto {
@@ -26,4 +19,10 @@ export class UpdateActivityDto {
   @IsNumber()
   @IsNotEmpty()
   readonly employeeId: number;
+
+  @IsDateString()
+  readonly startTime: string;
+
+  @IsDateString()
+  readonly endTime: string;
 }

@@ -143,6 +143,8 @@ export class ActivityService {
       data: {
         type: dto.activityType,
         employeeId: dto.employeeId,
+        startTime: new Date(dto.startTime),
+        endTime: new Date(dto.endTime),
       },
     });
   }
