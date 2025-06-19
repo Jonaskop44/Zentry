@@ -110,6 +110,6 @@ export class AuthController {
       maxAge: Number(refreshTokenExpiry),
     });
 
-    return { success: true };
+    return tokens.user;
   }
 }

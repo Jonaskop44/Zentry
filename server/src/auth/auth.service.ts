@@ -69,10 +69,12 @@ export class AuthService {
     if (!userFromDb) throw new NotFoundException('User not found!');
 
     const { accessToken, refreshToken } = await this.generateTokens(userFromDb);
+    const { password, ...userWithoutPassword } = userFromDb;
 
     return {
       accessToken,
       refreshToken,
+      user: userWithoutPassword,
     };
   }
 
