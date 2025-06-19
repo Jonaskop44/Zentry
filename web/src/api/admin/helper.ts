@@ -1,15 +1,11 @@
-import { User } from "@/types/user.types";
 import api from "../axios";
 
 export class Helper {
   constructor() {}
 
-  async login(user: User) {
+  async getAllEmployees() {
     return api
-      .post("auth/login", {
-        username: user.username,
-        password: user.password,
-      })
+      .get("admin/employees")
       .then((response) => {
         if (response.status !== 200) return { data: null, status: false };
 

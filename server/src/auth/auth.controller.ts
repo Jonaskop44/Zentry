@@ -64,7 +64,33 @@ export class AuthController {
 
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  async refreshToken(@Request() request) {
-    return this.authService.refreshToken(request.user);
+  async refreshToken(
+    @Request() request,
+    @Response({ passthrough: true }) response: ExpressResponse,
+  ) {
+    const tokens = await this.authService.refreshToken(request.user);
+
+    const accessTokenExpiry = ms(
+      process.env.JWT_EXPIRES_IN as unknown as number,
+    );
+    const refreshTokenExpiry = ms(
+      process.env.REFRESH_EXPIRES_IN as unknown as number,
+    );
+
+    response.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: Number(accessTokenExpiry),
+    });
+
+    response.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: Number(refreshTokenExpiry),
+    });
+
+    return { success: true };
   }
 }

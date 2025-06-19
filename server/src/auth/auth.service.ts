@@ -76,15 +76,9 @@ export class AuthService {
     };
   }
 
-  async validateRefreshToken(userId: number, token: string) {
+  async validateRefreshToken(userId: number) {
     const userFromDb = await this.userService.getUserById(userId);
-    if (userFromDb) {
-      const isTokenValid = await this.jwtService.verifyAsync(token, {
-        secret: this.refreshTokenConfig.secret,
-      });
-      if (!isTokenValid) throw new UnauthorizedException('Invalid token');
-
-      return userFromDb;
-    }
+    if (!userFromDb) throw new NotFoundException('User not found!');
+    return userFromDb;
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -18,7 +19,15 @@ export class RefreshJwtStrategy extends PassportStrategy(
     private authService: AuthService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: Request) => {
+          if (req?.cookies?.refreshToken) {
+            return req.cookies.refreshToken;
+          }
+          return null;
+        },
+      ]),
+
       secretOrKey: refreshjwtConfiguration.secret,
       ignoreExpiration: false,
       passReqToCallback: true,
@@ -26,11 +35,6 @@ export class RefreshJwtStrategy extends PassportStrategy(
   }
 
   validate(request: Request, payload: AuthJwtPayload) {
-    const authHeader = request.get('Authorization');
-    const refreshToken = authHeader
-      ? authHeader.replace('Bearer', '').trim()
-      : '';
-    const userId = payload.id;
-    return this.authService.validateRefreshToken(userId, refreshToken);
+    return this.authService.validateRefreshToken(payload.id);
   }
 }
