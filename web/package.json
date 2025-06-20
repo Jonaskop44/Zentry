@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@heroui/react": "^2.7.10",
+    "@hookform/resolvers": "^5.1.1",
     "@iconify/react": "^6.0.0",
     "axios": "^1.10.0",
     "framer-motion": "^12.18.1",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.58.1",
     "sonner": "^2.0.5",
+    "zod": "^3.25.67",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
