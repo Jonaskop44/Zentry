@@ -24,6 +24,7 @@ const AuthPage = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -39,14 +40,20 @@ const AuthPage = () => {
   const watchedPassword = currentForm.watch("password") || "";
 
   const onSubmit = (data: LoginFormData | RegisterFormData) => {
+    setIsLoading(true);
     if (variant === "LOGIN") {
-      apiClient.auth.helper.login(data as LoginFormData).then((response) => {
-        if (response.status) {
-          toast.success("Login successful!");
-        } else {
-          toast.error("Login failed. Please try again.");
-        }
-      });
+      apiClient.auth.helper
+        .login(data as LoginFormData)
+        .then((response) => {
+          if (response.status) {
+            toast.success("Login successful!");
+          } else {
+            toast.error("Login failed. Please try again.");
+          }
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else {
       apiClient.auth.helper
         .register(data as RegisterFormData)
@@ -57,6 +64,9 @@ const AuthPage = () => {
           } else {
             toast.error("Registration failed. Please try again.");
           }
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
@@ -337,12 +347,14 @@ const AuthPage = () => {
                 >
                   <Button
                     type="submit"
-                    className="w-full font-medium py-6 relative overflow-hidden"
-                    color={
-                      currentForm.formState.isValid ? "success" : "default"
-                    }
+                    className={`w-full font-medium py-6 relative overflow-hidden transition-colors ${
+                      currentForm.formState.isValid
+                        ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600"
+                        : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                    }`}
                     size="lg"
                     isDisabled={!currentForm.formState.isValid}
+                    isLoading={isLoading}
                   >
                     <motion.div
                       className="absolute inset-0 bg-white/20"
@@ -356,14 +368,11 @@ const AuthPage = () => {
                         repeatDelay: 2,
                       }}
                     />
-                    <motion.span
-                      animate={{
-                        scale: currentForm.formState.isValid ? [1, 1.05, 1] : 1,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {variant === "LOGIN" ? "Login" : "Sign Up"}
-                    </motion.span>
+                    {isLoading
+                      ? "Processing"
+                      : variant === "LOGIN"
+                      ? "Login"
+                      : "Sign Up"}
                   </Button>
                 </motion.div>
               </motion.form>
