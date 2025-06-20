@@ -37,6 +37,7 @@ export class Helper {
       .post("admin/employee", {
         firstName: employee.firstName,
         lastName: employee.lastName,
+        gender: employee.gender,
       })
       .then((response) => {
         if (response.status !== 201) return { data: null, status: false };
@@ -54,6 +55,7 @@ export class Helper {
       .patch(`admin/employee/${employee.id}`, {
         firstName: employee.firstName,
         lastName: employee.lastName,
+        gender: employee.gender,
       })
       .then((response) => {
         if (response.status !== 200) return { data: null, status: false };

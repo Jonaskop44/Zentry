@@ -46,6 +46,7 @@ export class AdminService {
       data: {
         firstName: dto.firstName,
         lastName: dto.lastName,
+        gender: dto.gender,
         userId: userId,
       },
     });
@@ -61,7 +62,8 @@ export class AdminService {
 
     if (
       dto.firstName === employee.firstName &&
-      dto.lastName === employee.lastName
+      dto.lastName === employee.lastName &&
+      dto.gender === employee.gender
     )
       throw new ConflictException('No changes detected');
 
@@ -82,6 +84,7 @@ export class AdminService {
       data: {
         firstName: dto.firstName,
         lastName: dto.lastName,
+        gender: dto.gender,
       },
     });
   }

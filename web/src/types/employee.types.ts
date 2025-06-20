@@ -2,6 +2,7 @@ export interface Employee {
   id?: number;
   firstName: string;
   lastName: string;
+  gender: Gender;
   createdAt?: Date;
   updatedAt?: Date;
   userId?: number;
@@ -24,4 +25,9 @@ export enum ActivityType {
   WC = "WC",
   SMOKE = "SMOKE",
   FREE = "FREE",
+}
+
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
 }
