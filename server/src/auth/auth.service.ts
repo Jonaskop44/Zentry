@@ -83,4 +83,14 @@ export class AuthService {
     if (!userFromDb) throw new NotFoundException('User not found!');
     return userFromDb;
   }
+
+  async verifyAccessToken(accessToken: string) {
+    try {
+      const payload =
+        await this.jwtService.verifyAsync<AuthJwtPayload>(accessToken);
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid access token!');
+    }
+  }
 }

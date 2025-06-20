@@ -15,6 +15,7 @@ import { LoacalAuthGuard } from 'src/guard/local-auth.guard';
 import { RefreshAuthGuard } from 'src/guard/refresh-jwt-auth.guard';
 import { Response as ExpressResponse } from 'express';
 import * as ms from 'ms';
+import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -111,5 +112,12 @@ export class AuthController {
     });
 
     return tokens.user;
+  }
+
+  @Post('validate-access-token')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async validateAccessToken(@Request() request) {
+    return this.authService.verifyAccessToken(request.cookies.accessToken);
   }
 }
