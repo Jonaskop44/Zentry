@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
-import { Button, Card, CardBody, CardHeader, Input } from "@heroui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Checkbox,
+  Input,
+} from "@heroui/react";
 import PasswordStrength from "@/components/Auth/PasswordStrength";
 import {
   loginSchema,
@@ -38,8 +45,15 @@ const AuthPage = () => {
     mode: "onChange",
   });
 
-  const currentForm = variant === "LOGIN" ? loginForm : registerForm;
-  const watchedPassword = currentForm.watch("password") || "";
+  const currentForm:
+    | UseFormReturn<LoginFormData>
+    | UseFormReturn<RegisterFormData> =
+    variant === "LOGIN" ? loginForm : registerForm;
+
+  const watchedPassword =
+    (currentForm as ReturnType<typeof useForm<RegisterFormData>>).watch(
+      "password"
+    ) || "";
 
   const onSubmit = (data: LoginFormData | RegisterFormData) => {
     setIsLoading(true);
@@ -275,7 +289,9 @@ const AuthPage = () => {
                         </motion.div>
                       }
                       onFocus={() => setFocusedField("username")}
-                      {...currentForm.register("username")}
+                      {...(variant === "LOGIN"
+                        ? loginForm.register("username")
+                        : registerForm.register("username"))}
                       isInvalid={!!currentForm.formState.errors.username}
                       errorMessage={
                         currentForm.formState.errors.username?.message
@@ -330,7 +346,9 @@ const AuthPage = () => {
                         </motion.button>
                       }
                       onFocus={() => setFocusedField("password")}
-                      {...currentForm.register("password")}
+                      {...(variant === "LOGIN"
+                        ? loginForm.register("password")
+                        : registerForm.register("password"))}
                       isInvalid={!!currentForm.formState.errors.password}
                       errorMessage={
                         currentForm.formState.errors.password?.message
@@ -342,6 +360,18 @@ const AuthPage = () => {
                     <PasswordStrength password={watchedPassword} />
                   )}
                 </motion.div>
+
+                {variant === "LOGIN" && (
+                  <div className="flex items-center justify-between pt-2">
+                    <Checkbox
+                      {...(
+                        currentForm as UseFormReturn<LoginFormData>
+                      ).register?.("rememberMe")}
+                    >
+                      Remember me
+                    </Checkbox>
+                  </div>
+                )}
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}

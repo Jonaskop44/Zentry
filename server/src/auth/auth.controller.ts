@@ -36,9 +36,9 @@ export class AuthController {
     const accessTokenExpiry = ms(
       process.env.JWT_EXPIRES_IN as unknown as number,
     );
-    const refreshTokenExpiry = ms(
-      process.env.REFRESH_EXPIRES_IN as unknown as number,
-    );
+    const refreshTokenExpiry = dto.rememberMe
+      ? ms(process.env.REFRESH_EXPIRES_IN as unknown as number)
+      : null;
 
     //Set Cookies
     response.cookie('accessToken', tokens.accessToken, {

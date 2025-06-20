@@ -1,16 +1,17 @@
-import { User } from "@/types/user.types";
 import api from "../axios";
 import { useUserStore } from "@/data/user-store";
+import { LoginFormData, RegisterFormData } from "@/lib/auth-validation";
 
 export class Helper {
   private userStore = useUserStore.getState();
   constructor() {}
 
-  async login(user: User) {
+  async login(user: LoginFormData) {
     return api
       .post("auth/login", {
         username: user.username,
         password: user.password,
+        rememberMe: user.rememberMe,
       })
       .then((response) => {
         if (response.status !== 200) return { data: null, status: false };
@@ -24,7 +25,7 @@ export class Helper {
       });
   }
 
-  async register(user: User) {
+  async register(user: RegisterFormData) {
     return api
       .post("auth/register", {
         username: user.username,
