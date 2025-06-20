@@ -19,8 +19,8 @@ const SessionProvider: FC<SessionProviderProps> = ({ children }) => {
       await apiClient.auth.helper
         .refreshToken()
         .then((response) => {
-          setUser(response.data);
           if (response.status) {
+            setUser(response.data);
           }
         })
         .finally(() => {

@@ -16,6 +16,7 @@ import {
 import FloatingElement from "@/components/Auth/FloatingElement";
 import ApiClient from "@/api";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const apiClient = new ApiClient();
 type Variant = "LOGIN" | "REGISTER";
@@ -25,6 +26,7 @@ const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -47,6 +49,7 @@ const AuthPage = () => {
         .then((response) => {
           if (response.status) {
             toast.success("Login successful!");
+            router.push("/dashboard");
           } else {
             toast.error("Login failed. Please try again.");
           }
