@@ -94,12 +94,12 @@ const DashboardPage = () => {
                 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <Card className="bg-transparent border-3 border-transparent group-hover:border-white/30 transition-all duration-300">
+                <Card className="bg-transparent border-3 border-transparent transition-all duration-300">
                   <CardBody className="p-2">
                     <div
                       className={`w-24 h-24 md:w-32 md:h-32 rounded-full ${getProfileColor(
                         employee.gender
-                      )} flex items-center justify-center border-4 border-white/20 group-hover:border-white/40 transition-all duration-300`}
+                      )} flex items-center justify-center border-4 border-white/20 transition-all duration-300`}
                     >
                       <Icon
                         icon={getProfileIcon(employee.gender)}
@@ -110,11 +110,7 @@ const DashboardPage = () => {
                 </Card>
 
                 {isManaging && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center"
-                  >
+                  <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center">
                     <Button
                       isIconOnly
                       color="primary"
@@ -123,12 +119,12 @@ const DashboardPage = () => {
                     >
                       <Icon icon="mdi:pencil" width={20} />
                     </Button>
-                  </motion.div>
+                  </div>
                 )}
               </motion.div>
 
               <motion.h3
-                className="text-white text-lg font-medium group-hover:text-gray-300 transition-colors"
+                className="text-white text-lg font-medium transition-colors"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
@@ -153,7 +149,7 @@ const DashboardPage = () => {
               transition: { duration: 0.2 },
             }}
             whileTap={{ scale: 0.95 }}
-            className="flex flex-col items-center cursor-pointer group"
+            className="flex flex-col items-center cursor-pointer"
           >
             <motion.div
               className="mb-4"
@@ -163,16 +159,18 @@ const DashboardPage = () => {
               }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <Card className="bg-transparent border-3 border-dashed border-gray-600 group-hover:border-white/50 transition-all duration-300">
-                <CardBody className="p-2 flex items-center justify-center w-24 h-24 md:w-32 md:h-32">
-                  <Icon
-                    icon="mdi:plus"
-                    className="text-gray-500 group-hover:text-white transition-colors text-4xl md:text-5xl"
-                  />
+              <Card className="bg-transparent border-3 border-dashed border-gray-600 transition-all duration-300">
+                <CardBody className="p-2">
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center transition-all duration-300">
+                    <Icon
+                      icon="mdi:plus"
+                      className="text-white text-4xl md:text-5xl"
+                    />
+                  </div>
                 </CardBody>
               </Card>
             </motion.div>
-            <h3 className="text-gray-500 text-lg font-medium group-hover:text-white transition-colors">
+            <h3 className="text-gray-300 text-lg font-medium transition-colors">
               Add Employee
             </h3>
           </motion.div>
@@ -186,11 +184,11 @@ const DashboardPage = () => {
         className="flex gap-4"
       >
         <Button
-          variant={isManaging ? "solid" : "bordered"}
+          variant="bordered"
           color="default"
           size="lg"
           startContent={<Icon icon="mdi:cog" width={20} />}
-          onClick={() => setIsManaging(!isManaging)}
+          onPress={() => setIsManaging(!isManaging)}
           className="text-white border-gray-600 hover:border-white"
         >
           {isManaging ? "Finish" : "Edit Profiles"}
@@ -218,10 +216,11 @@ const DashboardPage = () => {
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "linear",
                 }}
-                className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4"
+                className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"
               />
               <h2 className="text-white text-2xl font-bold">
-                Load {employees.find((u) => u.id === selectedEmployee)?.id}s
+                Load{" "}
+                {employees.find((u) => u.id === selectedEmployee)?.firstName}´s
                 Profil...
               </h2>
             </motion.div>
