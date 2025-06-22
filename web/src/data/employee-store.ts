@@ -2,11 +2,11 @@ import { Employee } from "@/types/employee.types";
 import { create } from "zustand";
 
 interface EmployeeState {
-  employee: Employee;
-  setEmployee: (employee: Employee) => void;
+  employees: Employee[];
+  setEmployees: (employees: Employee[]) => void;
 }
 
-export const useUserStore = create<EmployeeState>((set) => ({
-  employee: {} as Employee,
-  setEmployee: (employee: Employee) => set({ employee }),
+export const useEmployeeStore = create<EmployeeState>((set) => ({
+  employees: [] as Employee[],
+  setEmployees: (employees: Employee[]) => set({ employees }),
 }));
