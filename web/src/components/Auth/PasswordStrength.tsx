@@ -54,12 +54,12 @@ const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
         scale: password ? 1 : 0.9,
       }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="space-y-4 bg-gray-50/30 p-4 rounded-lg"
+      className="space-y-4 bg-black/30 p-4 rounded-lg"
     >
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-gray-400">
               Password Strength
             </span>
           </div>
@@ -73,7 +73,7 @@ const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
         </div>
 
         <div className="relative">
-          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-gray-200/30 rounded-full h-3 overflow-hidden">
             <motion.div
               className="h-3 rounded-full relative overflow-hidden"
               initial={{ width: 0 }}
@@ -110,8 +110,8 @@ const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
               transition={{ delay: index * 0.1, duration: 0.3 }}
               className={`flex items-center space-x-3 p-2 rounded-md transition-all duration-300 ${
                 isPassed
-                  ? "bg-green-200/40 border border-green-200"
-                  : "bg-white/40 border border-gray-200"
+                  ? "bg-green-300/40 border border-green-300"
+                  : "bg-gray-800/30 border border-gray-800"
               }`}
             >
               <motion.div
@@ -147,35 +147,12 @@ const PasswordStrength: FC<PasswordStrengthProps> = ({ password }) => {
               </motion.div>
               <motion.span
                 className={`text-sm font-medium ${
-                  isPassed ? "text-green-700" : "text-gray-600"
+                  isPassed ? "text-green-400" : "text-gray-600"
                 }`}
-                animate={{
-                  color: isPassed ? "#047857" : "#4B5563",
-                  x: isPassed ? [0, 5, 0] : 0,
-                }}
                 transition={{ duration: 0.3 }}
               >
                 {requirement.label}
               </motion.span>
-              {isPassed && (
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="ml-auto"
-                >
-                  <motion.div
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                    }}
-                    className="w-2 h-2 bg-green-400 rounded-full"
-                  />
-                </motion.div>
-              )}
             </motion.div>
           );
         })}
