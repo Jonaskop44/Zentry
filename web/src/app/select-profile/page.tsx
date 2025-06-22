@@ -8,6 +8,7 @@ import { useEmployeeStore } from "@/data/employee-store";
 import ApiClient from "@/api";
 import AddProfileModal from "@/components/Select-Profile/AddEmployeeModal";
 import ProfileCard from "@/components/Select-Profile/ProfileCard";
+import { toast } from "sonner";
 
 const apiClient = new ApiClient();
 
@@ -33,6 +34,19 @@ const DashboardPage = () => {
 
   const handleUserSelect = (employeeId: number) => {
     setSelectedEmployee(employeeId);
+  };
+
+  const handleDeleteEmployee = async (employeeId: number) => {
+    await apiClient.admin.helper.deleteEmployee(employeeId).then((response) => {
+      if (response.status) {
+        setEmployees(
+          employees.filter((employee) => employee.id !== employeeId)
+        );
+        toast.success("Employee profile deleted successfully!");
+      } else {
+        toast.error("Failed to delete employee profile. Please try again.");
+      }
+    });
   };
 
   return (
@@ -66,6 +80,7 @@ const DashboardPage = () => {
                 index={index}
                 isManaging={isManaging}
                 onSelect={handleUserSelect}
+                onDelete={handleDeleteEmployee}
               />
             ))}
 

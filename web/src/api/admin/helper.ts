@@ -18,7 +18,7 @@ export class Helper {
       });
   }
 
-  async getEmployeeById(id: string) {
+  async getEmployeeById(id: number) {
     return api
       .get(`admin/employee/${id}`)
       .then((response) => {
@@ -68,7 +68,7 @@ export class Helper {
       });
   }
 
-  async deleteEmployee(id: string) {
+  async deleteEmployee(id: number) {
     return api
       .delete(`admin/employee/${id}`)
       .then((response) => {
