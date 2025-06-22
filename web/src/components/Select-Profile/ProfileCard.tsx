@@ -12,6 +12,7 @@ interface ProfileCardProps {
   isManaging: boolean;
   onSelect: (id: number) => void;
   onDelete: (id: number) => void;
+  onEdit: (id: number) => void;
 }
 
 const ProfileCard: FC<ProfileCardProps> = ({
@@ -20,6 +21,7 @@ const ProfileCard: FC<ProfileCardProps> = ({
   isManaging,
   onSelect,
   onDelete,
+  onEdit,
 }) => {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -95,8 +97,17 @@ const ProfileCard: FC<ProfileCardProps> = ({
                 width={20}
               />
             </Button>
-
-            <Button isIconOnly color="primary" variant="solid" size="lg">
+            <Button
+              isIconOnly
+              color="primary"
+              variant="solid"
+              size="lg"
+              onPress={() => {
+                if (employee.id !== undefined) {
+                  onEdit(employee.id);
+                }
+              }}
+            >
               <Icon icon="mdi:pencil" width={20} />
             </Button>
           </div>

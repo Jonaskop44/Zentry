@@ -9,13 +9,24 @@ import ApiClient from "@/api";
 import AddProfileModal from "@/components/Select-Profile/AddEmployeeModal";
 import ProfileCard from "@/components/Select-Profile/ProfileCard";
 import { toast } from "sonner";
+import EditEmployeeModal from "@/components/Select-Profile/EditEmployeeModal";
 
 const apiClient = new ApiClient();
 
 const DashboardPage = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<number | null>(null);
+  const [editEmployee, setEditEmployee] = useState<number | null>(null);
   const [isManaging, setIsManaging] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isOpenAddModal,
+    onOpen: onOpenAddModal,
+    onOpenChange: onOpenChangeAddModal,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenEditModal,
+    onOpen: onOpenEditModal,
+    onOpenChange: onOpenChangeEditModal,
+  } = useDisclosure();
   const { setEmployees, employees } = useEmployeeStore();
 
   useEffect(() => {
@@ -34,6 +45,11 @@ const DashboardPage = () => {
 
   const handleUserSelect = (employeeId: number) => {
     setSelectedEmployee(employeeId);
+  };
+
+  const handleEditEmployee = (employeeId: number) => {
+    setEditEmployee(employeeId);
+    onOpenEditModal();
   };
 
   const handleDeleteEmployee = async (employeeId: number) => {
@@ -81,6 +97,7 @@ const DashboardPage = () => {
                 isManaging={isManaging}
                 onSelect={handleUserSelect}
                 onDelete={handleDeleteEmployee}
+                onEdit={handleEditEmployee}
               />
             ))}
 
@@ -99,7 +116,7 @@ const DashboardPage = () => {
                 transition: { duration: 0.2 },
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={onOpen}
+              onClick={onOpenAddModal}
               className="flex flex-col items-center cursor-pointer"
             >
               <motion.div
@@ -180,7 +197,14 @@ const DashboardPage = () => {
         </AnimatePresence>
       </div>
 
-      <AddProfileModal isOpen={isOpen} onClose={onOpenChange} />
+      <AddProfileModal isOpen={isOpenAddModal} onClose={onOpenChangeAddModal} />
+      {editEmployee !== null && (
+        <EditEmployeeModal
+          isOpen={isOpenEditModal}
+          onClose={onOpenChangeEditModal}
+          employee={employees.find((e) => e.id === editEmployee)!}
+        />
+      )}
     </>
   );
 };
