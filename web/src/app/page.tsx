@@ -119,7 +119,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-purple-300 to-blue-300 p-4 relative overflow-hidden">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-black p-4 relative overflow-hidden">
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: 20 }).map((_, i) => (
@@ -142,7 +142,7 @@ const AuthPage = () => {
         animate="visible"
         className="relative z-10"
       >
-        <Card className="w-full max-w-xl shadow-2xl bg-white/20 backdrop-blur-sm relative overflow-hidden">
+        <Card className="w-full max-w-xl shadow-2xl bg-black/30 backdrop-blur-sm relative overflow-hidden">
           {/* Animated background pattern */}
           <div className="absolute inset-0 opacity-5">
             <motion.div
@@ -157,7 +157,7 @@ const AuthPage = () => {
               }}
               style={{
                 backgroundImage:
-                  "radial-gradient(circle, #000 1px, transparent 1px)",
+                  "radial-gradient(circle, #fff 1px, transparent 1px)",
                 backgroundSize: "20px 20px",
               }}
             />
@@ -166,14 +166,14 @@ const AuthPage = () => {
           <CardHeader className="flex flex-col items-center text-center pb-8 relative">
             <motion.div variants={itemVariants} className="relative">
               <motion.div
-                className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mb-6 shadow-lg relative"
+                className="w-16 h-16 bg-black/40 rounded-full flex items-center justify-center mb-6 shadow-lg relative"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
                 animate={{
                   boxShadow: [
-                    "0 4px 20px rgba(0,0,0,0.1)",
-                    "0 8px 30px rgba(0,0,0,0.15)",
-                    "0 4px 20px rgba(0,0,0,0.1)",
+                    "0 4px 20px rgba(255, 255, 255, 0.05)",
+                    "0 8px 30px rgba(255, 255, 255, 0.08)",
+                    "0 4px 20px rgba(255, 255, 255, 0.05)",
                   ],
                 }}
                 transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
@@ -185,7 +185,7 @@ const AuthPage = () => {
                     repeat: Number.POSITIVE_INFINITY,
                     ease: "linear",
                   }}
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gray-200 to-transparent"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-white/30 to-transparent"
                   style={{
                     mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   }}
@@ -201,7 +201,7 @@ const AuthPage = () => {
                       icon={
                         variant === "LOGIN" ? "mdi:login" : "mdi:account-plus"
                       }
-                      className="h-8 w-8 text-gray-700"
+                      className="h-8 w-8 text-gray-200"
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -209,7 +209,7 @@ const AuthPage = () => {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h1 className="text-3xl font-bold text-gray-800 relative">
+              <h1 className="text-3xl font-bold text-gray-300 relative">
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -237,7 +237,7 @@ const AuthPage = () => {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -275,8 +275,24 @@ const AuthPage = () => {
                     <Input
                       label="Username"
                       placeholder="Your username"
-                      variant="bordered"
                       autoComplete="off"
+                      color="default"
+                      classNames={{
+                        inputWrapper: [
+                          "!bg-black/40",
+                          "!transition-colors",
+                          "!border",
+                          "!border-white/20",
+                        ],
+                        input: [
+                          "!text-white",
+                          "!placeholder:text-gray-400",
+                          "!bg-transparent",
+                        ],
+                        label: "text-white",
+                        description: "text-gray-400",
+                        errorMessage: "text-red-500",
+                      }}
                       startContent={
                         <motion.div
                           animate={{
@@ -314,7 +330,22 @@ const AuthPage = () => {
                     <Input
                       label="Password"
                       placeholder="Your password"
-                      variant="bordered"
+                      classNames={{
+                        inputWrapper: [
+                          "!bg-black/40",
+                          "!transition-colors",
+                          "!border",
+                          "!border-white/20",
+                        ],
+                        input: [
+                          "!text-white",
+                          "!placeholder:text-gray-400",
+                          "!bg-transparent",
+                        ],
+                        label: "text-white",
+                        description: "text-gray-400",
+                        errorMessage: "text-red-500",
+                      }}
                       type={showPassword ? "text" : "password"}
                       startContent={
                         <motion.div
@@ -330,7 +361,7 @@ const AuthPage = () => {
                       endContent={
                         <motion.button
                           type="button"
-                          className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                          className="p-1 rounded-full transition-colors"
                           onClick={() => setShowPassword(!showPassword)}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -364,6 +395,9 @@ const AuthPage = () => {
                 {variant === "LOGIN" && (
                   <div className="flex items-center justify-between pt-2">
                     <Checkbox
+                      classNames={{
+                        label: "text-gray-400",
+                      }}
                       {...(
                         currentForm as UseFormReturn<LoginFormData>
                       ).register?.("rememberMe")}
@@ -382,8 +416,8 @@ const AuthPage = () => {
                     type="submit"
                     className={`w-full font-medium py-6 relative overflow-hidden transition-colors ${
                       currentForm.formState.isValid
-                        ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600"
-                        : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                        ? "bg-gradient-to-br from-black via-gray-900 to-black hover:from-gray-800 hover:via-gray-700 hover:to-gray-800 text-white"
+                        : "bg-gray-600 text-gray-400 cursor-not-allowed"
                     }`}
                     size="lg"
                     isDisabled={!currentForm.formState.isValid}
@@ -420,7 +454,7 @@ const AuthPage = () => {
               <motion.button
                 type="button"
                 onClick={toggleMode}
-                className="text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors relative"
+                className="text-sm text-gray-300 hover:text-gray-400 font-medium transition-colors relative"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
