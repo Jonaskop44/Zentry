@@ -63,7 +63,7 @@ const AuthPage = () => {
         .then((response) => {
           if (response.status) {
             toast.success("Login successful!");
-            router.push("/dashboard");
+            router.push("/select-profile");
           } else {
             toast.error("Login failed. Please try again.");
           }

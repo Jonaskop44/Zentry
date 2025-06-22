@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const protectedRoutes = ["/dashboard"];
+  const protectedRoutes = ["/dashboard", "/select-profile"];
   const url = request.nextUrl.clone();
   const path = url.pathname;
 
@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!isProtectedRoute && isAuthenticated && path === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/select-profile", request.url));
   }
 
   if (isProtectedRoute && !isAuthenticated) {
@@ -45,5 +45,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard/:path*"],
+  matcher: ["/", "/dashboard/:path*", "/select-profile"],
 };
