@@ -25,7 +25,7 @@ const TodayActivities: FC<TodayActivityProps> = ({ activities }) => {
         <div className="flex items-center gap-2">
           <Icon icon="mdi:history" className="text-xl text-blue-500" />
           <h3 className="text-lg font-semibold text-white">
-            Heutige Aktivitäten
+            Today&apos;s activities
           </h3>
         </div>
       </CardHeader>

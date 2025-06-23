@@ -24,20 +24,20 @@ const DailyStatistics: FC<DailyStatisticsProps> = ({ stats }) => {
     {
       type: ActivityType.WORK,
       duration: stats.totalWork,
-      label: "Arbeitszeit",
+      label: "Working hours",
     },
     {
       type: ActivityType.BREAK,
       duration: stats.totalBreak,
-      label: "Pausenzeit",
+      label: "Break time",
     },
-    { type: ActivityType.WC, duration: stats.totalWC, label: "WC-Zeit" },
+    { type: ActivityType.WC, duration: stats.totalWC, label: "WC time" },
     {
       type: ActivityType.SMOKE,
       duration: stats.totalSmoke,
-      label: "Raucherpausen",
+      label: "Smoking breaks",
     },
-    { type: ActivityType.FREE, duration: stats.totalFree, label: "Freizeit" },
+    { type: ActivityType.FREE, duration: stats.totalFree, label: "Free time" },
   ];
 
   const totalTime =
@@ -52,7 +52,7 @@ const DailyStatistics: FC<DailyStatisticsProps> = ({ stats }) => {
       <CardHeader>
         <div className="flex items-center gap-2">
           <Icon icon="mdi:chart-pie" className="text-xl text-purple-500" />
-          <h3 className="text-lg font-semibold text-white">Tagesstatistik</h3>
+          <h3 className="text-lg font-semibold text-white">Daily statistics</h3>
         </div>
       </CardHeader>
       <CardBody className="space-y-4">
@@ -87,13 +87,13 @@ const DailyStatistics: FC<DailyStatisticsProps> = ({ stats }) => {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-gray-300">Gesamtaktivitäten</span>
+            <span className="text-gray-300">Overall activities</span>
             <span className="text-white font-bold">
               {stats.totalActivities}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-gray-300">Gesamtzeit</span>
+            <span className="text-gray-300">Total time</span>
             <span className="text-white font-bold">
               {formatDuration(totalTime)}
             </span>
