@@ -106,14 +106,6 @@ const DashboardPage = () => {
           <DailyStatistics stats={dailyStats} />
         </motion.div>
       </div>
-
-      {/* <ActivitySwitchModal
-        isOpen={isOpen}
-        onClose={onClose}
-        currentActivityType={currentActivity?.type || null}
-        newActivityType={activityToStart}
-        onConfirm={confirmActivitySwitch}
-      /> */}
     </div>
   );
 };
