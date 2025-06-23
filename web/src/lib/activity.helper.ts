@@ -12,15 +12,15 @@ export const formatDuration = (milliseconds: number) => {
 export const getActivityIcon = (type: ActivityType) => {
   switch (type) {
     case ActivityType.WORK:
-      return "mdi:briefcase";
+      return "solar:case-minimalistic-bold-duotone";
     case ActivityType.BREAK:
-      return "mdi:coffee";
+      return "ph:coffee-duotone";
     case ActivityType.WC:
       return "mdi:human-male-female";
     case ActivityType.SMOKE:
       return "mdi:smoking";
     case ActivityType.FREE:
-      return "mdi:clock-outline";
+      return "solar:clock-circle-broken";
     default:
       return "mdi:help-circle";
   }

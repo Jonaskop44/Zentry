@@ -81,7 +81,9 @@ const CurrentActivityStatus: FC<CurrentActivityStatusProps> = ({
                       onStopActivity(currentActivity.id);
                     }
                   }}
-                  startContent={<Icon icon="mdi:stop" width={16} />}
+                  startContent={
+                    <Icon icon="solar:stop-circle-bold-duotone" width={16} />
+                  }
                 >
                   Stop
                 </Button>

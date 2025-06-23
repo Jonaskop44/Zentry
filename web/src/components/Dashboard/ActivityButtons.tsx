@@ -24,7 +24,10 @@ const ActivityButtons: FC<ActivityButtonsProps> = ({
     <Card className="bg-gray-800/50 border border-gray-700 backdrop-blur-sm">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Icon icon="mdi:play-circle" className="text-xl text-green-500" />
+          <Icon
+            icon="solar:play-circle-broken"
+            className="text-xl text-green-500"
+          />
           <h3 className="text-lg font-semibold text-white">Start activity</h3>
         </div>
       </CardHeader>

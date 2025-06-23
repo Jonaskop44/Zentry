@@ -51,7 +51,10 @@ const DailyStatistics: FC<DailyStatisticsProps> = ({ stats }) => {
     <Card className="bg-gray-800/50 border border-gray-700 backdrop-blur-sm">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Icon icon="mdi:chart-pie" className="text-xl text-purple-500" />
+          <Icon
+            icon="solar:pie-chart-3-line-duotone"
+            className="text-xl text-purple-500"
+          />
           <h3 className="text-lg font-semibold text-white">Daily statistics</h3>
         </div>
       </CardHeader>

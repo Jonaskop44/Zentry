@@ -23,7 +23,7 @@ const TodayActivities: FC<TodayActivityProps> = ({ activities }) => {
     <Card className="bg-gray-800/50 border border-gray-700 backdrop-blur-sm mt-6 max-h-[400px]">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Icon icon="mdi:history" className="text-xl text-blue-500" />
+          <Icon icon="solar:history-broken" className="text-xl text-blue-500" />
           <h3 className="text-lg font-semibold text-white">
             Today&apos;s activities
           </h3>
@@ -107,10 +107,10 @@ const TodayActivities: FC<TodayActivityProps> = ({ activities }) => {
           {sortedActivities.length === 0 && (
             <div className="text-center py-8">
               <Icon
-                icon="mdi:calendar-blank"
+                icon="solar:calendar-outlines"
                 className="text-4xl text-gray-500 mb-2"
               />
-              <p className="text-gray-400">Noch keine Aktivitäten heute</p>
+              <p className="text-gray-400">No activities today</p>
             </div>
           )}
         </div>

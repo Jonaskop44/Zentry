@@ -179,11 +179,25 @@ const DashboardPage = () => {
             variant="bordered"
             color="default"
             size="lg"
-            startContent={<Icon icon="mdi:cog" width={20} />}
+            startContent={
+              <Icon icon="solar:settings-line-duotone" width={20} />
+            }
             onPress={() => setIsManaging(!isManaging)}
             className="text-white border-gray-600 hover:border-white"
           >
             {isManaging ? "Finish" : "Edit Profiles"}
+          </Button>
+          <Button
+            variant="bordered"
+            color="default"
+            size="lg"
+            startContent={
+              <Icon icon="solar:download-minimalistic-outline" width={20} />
+            }
+            onPress={() => setIsManaging(!isManaging)}
+            className="text-white border-gray-600 hover:border-white"
+          >
+            Export all activities
           </Button>
         </motion.div>
 

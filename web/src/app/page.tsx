@@ -203,7 +203,9 @@ const AuthPage = () => {
                   >
                     <Icon
                       icon={
-                        variant === "LOGIN" ? "mdi:login" : "mdi:account-plus"
+                        variant === "LOGIN"
+                          ? "solar:login-2-line-duotone"
+                          : "solar:user-plus-bold-duotone"
                       }
                       className="h-8 w-8 text-gray-200"
                     />
@@ -305,7 +307,10 @@ const AuthPage = () => {
                           }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <Icon icon="mdi:account" className="h-4 w-4" />
+                          <Icon
+                            icon="solar:user-bold-duotone"
+                            className="h-4 w-4"
+                          />
                         </motion.div>
                       }
                       onFocus={() => setFocusedField("username")}
@@ -359,7 +364,10 @@ const AuthPage = () => {
                           }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <Icon icon="mdi:lock" className="h-4 w-4" />
+                          <Icon
+                            icon="solar:lock-password-bold-duotone"
+                            className="h-4 w-4"
+                          />
                         </motion.div>
                       }
                       endContent={

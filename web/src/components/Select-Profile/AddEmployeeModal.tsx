@@ -87,7 +87,10 @@ const AddProfileModal: FC<AddProfileModalProps> = ({ isOpen, onClose }) => {
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <div className="flex items-center gap-3">
-            <Icon icon="mdi:account-plus" className="text-2xl text-blue-500" />
+            <Icon
+              icon="solar:user-plus-bold-duotone"
+              className="text-2xl text-blue-500"
+            />
             <h2 className="text-xl font-bold text-white">
               Add New Employee Profile
             </h2>

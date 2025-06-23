@@ -31,7 +31,10 @@ const QuickActions = () => {
     <Card className="bg-gray-800/50 border border-gray-700 backdrop-blur-sm">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Icon icon="mdi:lightning-bolt" className="text-xl text-blue-500" />
+          <Icon
+            icon="solar:bolt-line-duotone"
+            className="text-xl text-blue-500"
+          />
           <h3 className="text-lg font-semibold text-white">Quick actions</h3>
         </div>
       </CardHeader>
@@ -39,7 +42,9 @@ const QuickActions = () => {
         <Button
           variant="flat"
           color="primary"
-          startContent={<Icon icon="mdi:file-export" width={16} />}
+          startContent={
+            <Icon icon="solar:download-minimalistic-bold" width={16} />
+          }
           className="w-full justify-start"
           onPress={handleExportActivities}
         >

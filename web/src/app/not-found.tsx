@@ -11,19 +11,19 @@ const NotFoundPage = () => {
 
   const actionList = [
     {
-      icon: "mdi:home",
+      icon: "solar:home-2-linear",
       text: "To the homepage",
       delay: 0,
       onClick: () => router.push("/"),
     },
     {
-      icon: "mdi:refresh",
+      icon: "solar:refresh-line-duotone",
       text: "Reload page",
       delay: 0.1,
       onClick: () => window.location.reload(),
     },
     {
-      icon: "mdi:arrow-left",
+      icon: "solar:arrow-left-bold-duotone",
       text: "Go back",
       delay: 0.2,
       onClick: () => router.push(previousPage),

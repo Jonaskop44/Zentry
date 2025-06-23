@@ -93,7 +93,11 @@ const ProfileCard: FC<ProfileCardProps> = ({
               }}
             >
               <Icon
-                icon={confirmingDelete ? "mdi:alert" : "mdi:trash-can"}
+                icon={
+                  confirmingDelete
+                    ? "solar:shield-warning-broken"
+                    : "solar:trash-bin-2-line-duotone"
+                }
                 width={20}
               />
             </Button>
@@ -108,7 +112,7 @@ const ProfileCard: FC<ProfileCardProps> = ({
                 }
               }}
             >
-              <Icon icon="mdi:pencil" width={20} />
+              <Icon icon="solar:pen-new-square-line-duotone" width={20} />
             </Button>
           </div>
         )}
