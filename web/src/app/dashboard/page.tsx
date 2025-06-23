@@ -12,6 +12,7 @@ import ActivityButtons from "@/components/Dashboard/ActivityButtons";
 import { ActivityType } from "@/types/employee.types";
 import TodayActivities from "@/components/Dashboard/TodayActivities";
 import DailyStatistics from "@/components/Dashboard/DailyStatistics";
+import QuickActions from "@/components/Dashboard/QuickActions";
 
 const DashboardPage = () => {
   const { employee } = useEmployeeStore();
@@ -73,7 +74,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black p-6">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black p-6">
       <DashboardHeader employee={employee} currentTime={currentTime} />
 
       <CurrentActivityStatus
@@ -104,6 +105,7 @@ const DashboardPage = () => {
           className="space-y-6"
         >
           <DailyStatistics stats={dailyStats} />
+          <QuickActions />
         </motion.div>
       </div>
     </div>
