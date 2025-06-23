@@ -58,6 +58,17 @@ export const useTimeTracking = (initialEmployee: Employee) => {
     }
   };
 
+  const getTodayActivities = () => {
+    const today = new Date().toDateString();
+    return (
+      employee.activities?.filter(
+        (activity) =>
+          activity.startTime &&
+          new Date(activity.startTime).toDateString() === today
+      ) || []
+    );
+  };
+
   return {
     employee,
     currentTime,
@@ -65,5 +76,6 @@ export const useTimeTracking = (initialEmployee: Employee) => {
     elapsedTime,
     startActivity,
     stopActivity,
+    getTodayActivities,
   };
 };

@@ -10,6 +10,7 @@ import CurrentActivityStatus from "@/components/Dashboard/CurrentActivityStatus"
 import { motion } from "framer-motion";
 import ActivityButtons from "@/components/Dashboard/ActivityButtons";
 import { ActivityType } from "@/types/employee.types";
+import TodayActivities from "@/components/Dashboard/TodayActivities";
 
 const DashboardPage = () => {
   const { employee } = useEmployeeStore();
@@ -19,6 +20,7 @@ const DashboardPage = () => {
     elapsedTime,
     stopActivity,
     startActivity,
+    getTodayActivities,
   } = useTimeTracking(employee);
   const { setCurrentActivity } = useEmployeeStore();
   const router = useRouter();
@@ -90,10 +92,7 @@ const DashboardPage = () => {
             onStartActivity={handleStartActivity}
           />
 
-          {/* <TodayActivities
-            activities={getTodayActivities()}
-            employeeGender={employee.gender}
-          /> */}
+          <TodayActivities activities={getTodayActivities()} />
         </motion.div>
 
         {/* <motion.div
