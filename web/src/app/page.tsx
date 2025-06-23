@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
@@ -96,6 +96,13 @@ const AuthPage = () => {
     setFocusedField(null);
   };
 
+  const floatingPositions = useMemo(() => {
+    return Array.from({ length: 20 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+    }));
+  }, []);
+
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
     visible: {
@@ -122,14 +129,11 @@ const AuthPage = () => {
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-black p-4 relative overflow-hidden">
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {floatingPositions.map((pos, i) => (
           <div
             key={i}
             className="absolute"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
+            style={{ left: pos.left, top: pos.top }}
           >
             <FloatingElement delay={i * 0.2} />
           </div>
