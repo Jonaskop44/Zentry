@@ -9,7 +9,8 @@ import { toast } from "sonner";
 const apiClient = new ApiClient();
 
 export const useTimeTracking = () => {
-  const { currentActivity, setCurrentActivity, employee } = useEmployeeStore();
+  const { currentActivity, setCurrentActivity, employee, setEmployee } =
+    useEmployeeStore();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [elapsedTime, setElapsedTime] = useState(0);
 
@@ -51,6 +52,14 @@ export const useTimeTracking = () => {
           if (response.status) {
             setCurrentActivity(null);
             setElapsedTime(0);
+            const updated =
+              employee.activities?.filter((a) => a.id !== response.data.id) ??
+              [];
+            setEmployee({
+              ...employee,
+              activities: [...updated, response.data],
+            });
+
             toast.success("Activity stopped successfully.");
           }
         });
