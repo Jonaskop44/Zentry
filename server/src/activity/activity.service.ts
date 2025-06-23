@@ -60,9 +60,6 @@ export class ActivityService {
       orderBy: {
         startTime: 'desc',
       },
-      include: {
-        employee: true,
-      },
     });
 
     if (!activities || activities.length === 0) {
@@ -89,14 +86,7 @@ export class ActivityService {
       orderBy: {
         startTime: 'desc',
       },
-      include: {
-        employee: true,
-      },
     });
-
-    if (!activities || activities.length === 0) {
-      throw new NotFoundException('No activities found for this employee');
-    }
 
     return activities;
   }

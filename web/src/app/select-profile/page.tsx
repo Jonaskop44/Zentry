@@ -10,6 +10,7 @@ import AddProfileModal from "@/components/Select-Profile/AddEmployeeModal";
 import ProfileCard from "@/components/Select-Profile/ProfileCard";
 import { toast } from "sonner";
 import EditEmployeeModal from "@/components/Select-Profile/EditEmployeeModal";
+import { useRouter } from "next/navigation";
 
 const apiClient = new ApiClient();
 
@@ -27,7 +28,8 @@ const DashboardPage = () => {
     onOpen: onOpenEditModal,
     onOpenChange: onOpenChangeEditModal,
   } = useDisclosure();
-  const { setEmployees, employees } = useEmployeeStore();
+  const { setEmployees, employees, setEmployee } = useEmployeeStore();
+  const router = useRouter();
 
   useEffect(() => {
     const getEmployees = async () => {
@@ -45,6 +47,28 @@ const DashboardPage = () => {
 
   const handleUserSelect = (employeeId: number) => {
     setSelectedEmployee(employeeId);
+    const employee = employees.find((e) => e.id === employeeId);
+    if (employee) {
+      apiClient.activity.helper.getActivityByEmployeeId(employeeId);
+      setEmployee(employee);
+      apiClient.activity.helper
+        .getActivityByEmployeeId(employeeId)
+        .then((response) => {
+          if (response.status) {
+            setEmployee({
+              ...employee,
+              activities: response.data,
+            });
+            router.push(`/dashboard`);
+          } else {
+            toast.error(
+              "Failed to load employee activities. Please try again."
+            );
+          }
+        });
+    } else {
+      toast.error("Selected employee not found.");
+    }
   };
 
   const handleEditEmployee = (employeeId: number) => {

@@ -21,7 +21,7 @@ export class Helper {
       });
   }
 
-  async stopActivity(activityId: string) {
+  async stopActivity(activityId: number) {
     return api
       .post(`activity/end/${activityId}`)
       .then((response) => {
@@ -49,7 +49,7 @@ export class Helper {
       });
   }
 
-  async getActivityByEmployeeId(employeeId: string) {
+  async getActivityByEmployeeId(employeeId: number) {
     return api
       .get(`activity/${employeeId}`)
       .then((response) => {
@@ -63,7 +63,7 @@ export class Helper {
       });
   }
 
-  async deleteActivity(activityId: string) {
+  async deleteActivity(activityId: number) {
     return api
       .delete(`activity/${activityId}`)
       .then((response) => {
