@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import ActivityButtons from "@/components/Dashboard/ActivityButtons";
 import { ActivityType } from "@/types/employee.types";
 import TodayActivities from "@/components/Dashboard/TodayActivities";
+import DailyStatistics from "@/components/Dashboard/DailyStatistics";
 
 const DashboardPage = () => {
   const { employee } = useEmployeeStore();
@@ -21,7 +22,8 @@ const DashboardPage = () => {
     stopActivity,
     startActivity,
     getTodayActivities,
-  } = useTimeTracking(employee);
+    dailyStats,
+  } = useTimeTracking();
   const { setCurrentActivity } = useEmployeeStore();
   const router = useRouter();
 
@@ -95,15 +97,14 @@ const DashboardPage = () => {
           <TodayActivities activities={getTodayActivities()} />
         </motion.div>
 
-        {/* <motion.div
+        <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-6"
         >
           <DailyStatistics stats={dailyStats} />
-          <QuickActions />
-        </motion.div> */}
+        </motion.div>
       </div>
 
       {/* <ActivitySwitchModal
