@@ -46,7 +46,7 @@ const ActivityButtons: FC<ActivityButtonsProps> = ({
                 onPress={() => onStartActivity(type)}
                 startContent={<Icon icon={getActivityIcon(type)} width={20} />}
                 className="w-full h-20 flex-col gap-2"
-                isDisabled={currentActivity?.type === type}
+                isDisabled={!!currentActivity && currentActivity.type !== type}
               >
                 <span className="font-semibold">{getActivityLabel(type)}</span>
                 {currentActivity?.type === type && (
