@@ -15,7 +15,7 @@ import { FC } from "react";
 interface CurrentActivityStatusProps {
   currentActivity: Activity | null;
   elapsedTime: number;
-  onStopActivity: () => void;
+  onStopActivity: (activityId: number) => void;
 }
 
 const CurrentActivityStatus: FC<CurrentActivityStatusProps> = ({
@@ -41,9 +41,7 @@ const CurrentActivityStatus: FC<CurrentActivityStatusProps> = ({
                   } animate-pulse`}
                 />
                 <h2 className="text-xl font-semibold text-white">
-                  {currentActivity
-                    ? "Aktuelle Aktivität"
-                    : "Keine aktive Aktivität"}
+                  {currentActivity ? "Current activity" : "No active activity"}
                 </h2>
               </div>
               {currentActivity && (
@@ -69,7 +67,7 @@ const CurrentActivityStatus: FC<CurrentActivityStatusProps> = ({
                     {formatDuration(elapsedTime)}
                   </p>
                   <p className="text-gray-400 text-sm">
-                    Gestartet:{" "}
+                    Started:{" "}
                     {new Date(currentActivity.startTime!).toLocaleTimeString(
                       "de-DE"
                     )}
@@ -78,10 +76,14 @@ const CurrentActivityStatus: FC<CurrentActivityStatusProps> = ({
                 <Button
                   color="danger"
                   variant="flat"
-                  onPress={onStopActivity}
+                  onPress={() => {
+                    if (currentActivity.id !== undefined) {
+                      onStopActivity(currentActivity.id);
+                    }
+                  }}
                   startContent={<Icon icon="mdi:stop" width={16} />}
                 >
-                  Stoppen
+                  Stop
                 </Button>
               </div>
             )}
