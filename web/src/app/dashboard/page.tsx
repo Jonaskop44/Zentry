@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { Spinner } from "@heroui/react";
 import DashboardHeader from "@/components/Dashboard/Header";
 import { useEmployeeStore } from "@/data/employee-store";
 import { useTimeTracking } from "@/hooks/useTimeTracking";
@@ -13,6 +12,7 @@ import { ActivityType } from "@/types/employee.types";
 import TodayActivities from "@/components/Dashboard/TodayActivities";
 import DailyStatistics from "@/components/Dashboard/DailyStatistics";
 import QuickActions from "@/components/Dashboard/QuickActions";
+import Loader from "@/components/Common/Loader";
 
 const DashboardPage = () => {
   const { employee } = useEmployeeStore();
@@ -59,18 +59,7 @@ const DashboardPage = () => {
   }, [employee.activities, employee.id, router, setCurrentActivity]);
 
   if (!employee.id) {
-    return (
-      <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
-        <Spinner
-          size="lg"
-          label="Loading..."
-          variant="gradient"
-          classNames={{
-            label: "text-white font-semibold",
-          }}
-        />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

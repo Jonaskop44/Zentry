@@ -1,6 +1,7 @@
 "use client";
 
 import ApiClient from "@/api";
+import Loader from "@/components/Common/Loader";
 import { useUserStore } from "@/data/user-store";
 import { FC, useEffect, useState } from "react";
 
@@ -32,7 +33,7 @@ const SessionProvider: FC<SessionProviderProps> = ({ children }) => {
   }, [setUser]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return <>{children}</>;

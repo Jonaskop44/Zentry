@@ -89,6 +89,16 @@ const DashboardPage = () => {
     });
   };
 
+  const handleExportAllActivities = async () => {
+    await apiClient.activity.statistics.getAllStatistics().then((response) => {
+      if (response.status) {
+        toast.success("All activities exported successfully!");
+      } else {
+        toast.error("Failed to export all activities. Please try again.");
+      }
+    });
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-center p-8">
@@ -194,7 +204,7 @@ const DashboardPage = () => {
             startContent={
               <Icon icon="solar:download-minimalistic-outline" width={20} />
             }
-            onPress={() => setIsManaging(!isManaging)}
+            onPress={handleExportAllActivities}
             className="text-white border-gray-600 hover:border-white"
           >
             Export all activities
