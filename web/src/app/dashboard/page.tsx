@@ -20,6 +20,7 @@ const DashboardPage = () => {
     stopActivity,
     startActivity,
   } = useTimeTracking(employee);
+  const { setCurrentActivity } = useEmployeeStore();
   const router = useRouter();
 
   const handleStartActivity = (type: ActivityType) => {
@@ -39,8 +40,18 @@ const DashboardPage = () => {
   useEffect(() => {
     if (!employee.id) {
       router.push("/select-profile");
+    } else {
+      if (employee.activities && employee.activities.length > 0) {
+        const activeActivity = employee.activities.find(
+          (activity) => activity.endTime === null
+        );
+
+        if (activeActivity) {
+          setCurrentActivity(activeActivity);
+        }
+      }
     }
-  }, [employee.id, router]);
+  }, [employee.activities, employee.id, router, setCurrentActivity]);
 
   if (!employee.id) {
     return (
