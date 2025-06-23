@@ -83,7 +83,7 @@ const TodayActivities: FC<TodayActivityProps> = ({ activities }) => {
                               minute: "2-digit",
                             }
                           )
-                        : "Läuft"}
+                        : "Running"}
                     </p>
                   </div>
                 </div>

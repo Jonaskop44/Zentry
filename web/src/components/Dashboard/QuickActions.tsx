@@ -1,5 +1,6 @@
 import ApiClient from "@/api";
 import { useEmployeeStore } from "@/data/employee-store";
+import { Employee } from "@/types/employee.types";
 import { Card, CardBody, CardHeader, Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,7 @@ const apiClient = new ApiClient();
 
 const QuickActions = () => {
   const router = useRouter();
-  const { employee } = useEmployeeStore();
+  const { employee, setEmployee, setCurrentActivity } = useEmployeeStore();
 
   const handleExportActivities = async () => {
     if (!employee.id) {
@@ -25,6 +26,12 @@ const QuickActions = () => {
           toast.error("Failed to export activities.");
         }
       });
+  };
+
+  const handleChangeEmployee = () => {
+    setCurrentActivity(null);
+    setEmployee({} as Employee);
+    router.push("/select-profile");
   };
 
   return (
@@ -55,7 +62,7 @@ const QuickActions = () => {
           color="warning"
           startContent={<Icon icon="mdi:swap-horizontal" width={16} />}
           className="w-full justify-start"
-          onPress={() => router.push("/select-profile")}
+          onPress={handleChangeEmployee}
         >
           Change Employee
         </Button>
