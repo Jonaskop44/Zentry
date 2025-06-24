@@ -1,0 +1,48 @@
+services:
+  zentry-db:
+    container_name: zentry-db
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./server/.env
+    volumes:
+      - zentry-db-data:/var/lib/postgresql/data
+    networks:
+      - proxy
+  zentry-web:
+    container_name: zentry-web
+    build:
+      context: web/
+      dockerfile: Dockerfile
+      target: prod
+    restart: always
+    networks:
+      - proxy
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./web/.env
+  zentry-server:
+    container_name: zentry-server
+    build:
+      context: server/
+      dockerfile: Dockerfile
+      target: prod
+    restart: always
+    env_file:
+      - ./server/.env
+    networks:
+      - proxy
+    ports:
+      - "4000:4000"
+    depends_on:
+      - zentry-db
+
+volumes:
+  zentry-db-data:
+    driver: local
+
+networks:
+  proxy:
+    external: false
+    name: proxy
