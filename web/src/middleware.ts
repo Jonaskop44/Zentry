@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { API_URL } from "./lib/config";
 
 export async function middleware(request: NextRequest) {
   const protectedRoutes = ["/dashboard", "/select-profile"];
@@ -15,7 +16,7 @@ export async function middleware(request: NextRequest) {
   if (accessToken) {
     try {
       const verifyResponse = await fetch(
-        "http://localhost:4000/api/v1/auth/validate-access-token",
+        `${API_URL}/auth/validate-access-token`,
         {
           method: "POST",
           headers: {

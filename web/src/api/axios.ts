@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { API_URL } from "@/lib/config";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`,
+  baseURL: API_URL,
   withCredentials: true,
 });
 
