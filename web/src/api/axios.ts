@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { API_URL } from "@/lib/config";
+import { API_URL_DEVELOPMENT } from "@/lib/config";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL_DEVELOPMENT,
   withCredentials: true,
 });
 
