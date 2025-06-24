@@ -17,8 +17,6 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 
-RUN npx prisma migrate deploy
-RUN npx prisma generate
 RUN npm run build
 #############################################
 
@@ -36,6 +34,9 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/generated/prisma ./generated/prisma
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
+COPY wait-for-db.sh ./wait-for-db.sh
+RUN chmod +x ./wait-for-db.sh
+
 EXPOSE 4000
 
-CMD ["npm", "run", "start:prod"]
+CMD ["./wait-for-db.sh", "zentry-db", "sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
