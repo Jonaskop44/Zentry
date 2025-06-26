@@ -2,7 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StartActivityDto, UpdateActivityDto } from './dto/activity.dto';
 import * as ExcelJS from 'exceljs';
-import { format } from 'date-fns';
+import { format, differenceInMinutes } from 'date-fns';
+import { groupBy } from 'lodash';
+import { secondsToHHMMSS } from './activity.helper';
 
 @Injectable()
 export class ActivityService {
@@ -156,55 +158,122 @@ export class ActivityService {
     });
 
     if (!activities.length) throw new NotFoundException('No activities found');
-
-    const activityTypeTranslations: Record<string, string> = {
-      WORK: 'Arbeit',
-      BREAK: 'Pause',
-      WC: 'WC',
-      SMOKE: 'Raucherpause',
-      FREE: 'Frei',
-    };
-
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Activities');
 
-    worksheet.columns = [
-      { header: 'Name', key: 'name', width: 30 },
-      { header: 'Typ', key: 'type', width: 15 },
-      { header: 'Start', key: 'startTime', width: 25 },
-      { header: 'Ende', key: 'endTime', width: 25 },
-      { header: 'Dauer (Minuten)', key: 'duration', width: 20 },
-    ];
+    // Set workbook properties
+    const employeesGrouped = employeeId
+      ? {
+          [`${activities[0].employee.firstName} ${activities[0].employee.lastName}`]:
+            activities,
+        }
+      : activities.reduce(
+          (acc, activity) => {
+            const name = `${activity.employee.firstName} ${activity.employee.lastName}`;
+            if (!acc[name]) acc[name] = [];
+            acc[name].push(activity);
+            return acc;
+          },
+          {} as Record<string, typeof activities>,
+        );
 
-    const totalMinutesByEmployee: Record<string, number> = {};
+    for (const [employeeName, employeeActivities] of Object.entries(
+      employeesGrouped,
+    )) {
+      const groupedByDay = employeeActivities.reduce(
+        (acc, a) => {
+          const date = format(new Date(a.startTime), 'yyyy-MM-dd');
+          if (!acc[date]) acc[date] = [];
+          acc[date].push(a);
+          return acc;
+        },
+        {} as Record<string, typeof activities>,
+      );
 
-    activities.forEach((entry) => {
-      const start = new Date(entry.startTime);
-      const end = entry.endTime ? new Date(entry.endTime) : new Date();
+      const worksheet = workbook.addWorksheet(employeeName);
 
-      const durationMs = end.getTime() - start.getTime();
-      const duration = parseFloat((durationMs / 60000).toFixed(2));
+      worksheet.columns = [
+        { header: 'Tag', key: 'day', width: 20 },
+        { header: 'Arbeit (hh:mm:ss)', key: 'work', width: 18 },
+        { header: 'Pause (hh:mm:ss)', key: 'break', width: 18 },
+        { header: 'Raucherpause (hh:mm:ss)', key: 'smoke', width: 20 },
+        { header: 'WC (hh:mm:ss)', key: 'wc', width: 18 },
+        { header: 'Frei (hh:mm:ss)', key: 'free', width: 18 },
+        { header: 'Nettoarbeit (hh:mm:ss)', key: 'netto', width: 22 },
+      ];
 
-      const name = `${entry.employee.firstName} ${entry.employee.lastName}`;
-      totalMinutesByEmployee[name] =
-        (totalMinutesByEmployee[name] || 0) + duration;
+      const monthlyTotals = {
+        work: 0,
+        break: 0,
+        smoke: 0,
+        wc: 0,
+        free: 0,
+        netto: 0,
+      };
 
-      worksheet.addRow({
-        name,
-        type: activityTypeTranslations[entry.type] ?? entry.type,
-        startTime: format(start, 'yyyy-MM-dd HH:mm:ss'),
-        endTime: entry.endTime ? format(end, 'yyyy-MM-dd HH:mm:ss') : '',
-        duration: duration,
+      Object.entries(groupedByDay).forEach(([day, entries], index) => {
+        const sum = {
+          work: 0,
+          break: 0,
+          smoke: 0,
+          wc: 0,
+          free: 0,
+        };
+
+        entries.forEach((entry) => {
+          const start = new Date(entry.startTime);
+          const end = entry.endTime ? new Date(entry.endTime) : new Date();
+          const seconds = Math.round((end.getTime() - start.getTime()) / 1000);
+
+          switch (entry.type) {
+            case 'WORK':
+              sum.work += seconds;
+              break;
+            case 'BREAK':
+              sum.break += seconds;
+              break;
+            case 'SMOKE':
+              sum.smoke += seconds;
+              break;
+            case 'WC':
+              sum.wc += seconds;
+              break;
+            case 'FREE':
+              sum.free += seconds;
+              break;
+          }
+        });
+
+        const netto = sum.work - (sum.break + sum.smoke + sum.wc);
+
+        worksheet.addRow({
+          day: `Tag ${index + 1} (${day})`,
+          work: secondsToHHMMSS(sum.work),
+          break: secondsToHHMMSS(sum.break),
+          smoke: secondsToHHMMSS(sum.smoke),
+          wc: secondsToHHMMSS(sum.wc),
+          free: secondsToHHMMSS(sum.free),
+          netto: secondsToHHMMSS(netto),
+        });
+
+        monthlyTotals.work += sum.work;
+        monthlyTotals.break += sum.break;
+        monthlyTotals.smoke += sum.smoke;
+        monthlyTotals.wc += sum.wc;
+        monthlyTotals.free += sum.free;
+        monthlyTotals.netto += netto;
       });
-    });
 
-    worksheet.addRow({});
-    Object.entries(totalMinutesByEmployee).forEach(([name, minutes]) => {
+      worksheet.addRow({});
       worksheet.addRow({
-        name: `Total für ${name}`,
-        duration: `${minutes.toFixed(2)} Minuten`,
+        day: 'Gesamt',
+        work: secondsToHHMMSS(monthlyTotals.work),
+        break: secondsToHHMMSS(monthlyTotals.break),
+        smoke: secondsToHHMMSS(monthlyTotals.smoke),
+        wc: secondsToHHMMSS(monthlyTotals.wc),
+        free: secondsToHHMMSS(monthlyTotals.free),
+        netto: secondsToHHMMSS(monthlyTotals.netto),
       });
-    });
+    }
 
     const bufferData = await workbook.xlsx.writeBuffer();
     const buffer = Buffer.isBuffer(bufferData)
