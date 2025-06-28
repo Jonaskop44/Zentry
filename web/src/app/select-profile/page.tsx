@@ -30,6 +30,7 @@ const DashboardPage = () => {
   } = useDisclosure();
   const { setEmployees, employees, setEmployee } = useEmployeeStore();
   const router = useRouter();
+  const employeeToEdit = employees.find((e) => e.id === editEmployee);
 
   useEffect(() => {
     const getEmployees = async () => {
@@ -246,11 +247,11 @@ const DashboardPage = () => {
       </div>
 
       <AddProfileModal isOpen={isOpenAddModal} onClose={onOpenChangeAddModal} />
-      {editEmployee !== null && (
+      {editEmployee !== null && employeeToEdit && (
         <EditEmployeeModal
           isOpen={isOpenEditModal}
           onClose={onOpenChangeEditModal}
-          employee={employees.find((e) => e.id === editEmployee)!}
+          employee={employeeToEdit}
         />
       )}
     </>
