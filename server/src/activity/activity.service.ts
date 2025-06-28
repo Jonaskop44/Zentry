@@ -243,7 +243,7 @@ export class ActivityService {
           }
         });
 
-        const netto = sum.work - (sum.break + sum.smoke + sum.wc);
+        const netto = sum.work - (sum.break + sum.smoke + sum.wc + sum.free);
 
         worksheet.addRow({
           day: `Tag ${index + 1} (${day})`,
